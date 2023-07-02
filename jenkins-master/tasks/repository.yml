@@ -1,0 +1,22 @@
+---
+# Task file to configure repository
+
+  - name: Add  key repository
+    ansible.builtin.get_url:
+      url: "{{ jenkins_repository.url }}/{{ jenkins_repository.key }}"
+      dest: /usr/share/keyrings/jenkins-keyring.asc
+    when: jenkins_master_behavior == 'install'
+
+  - name: Remove key repository
+    ansible.builtin.file:
+      path: /usr/share/keyrings/jenkins-keyring.asc
+      state:  absent
+    when: jenkins_master_behavior == 'remove'
+
+  - name: "{{ 'Remove' if (jenkins_master_behavior == 'remove') else 'Add' }} Jenkins repository"
+    ansible.builtin.apt_repository:
+      repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] {{ jenkins_repository.url }} binary/"
+      filename: jenkins
+      state:  "{{ 'absent' if (jenkins_master_behavior == 'remove') else 'present' }}"
+      update_cache: true
+...

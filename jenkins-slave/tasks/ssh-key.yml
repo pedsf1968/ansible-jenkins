@@ -1,0 +1,19 @@
+---
+# Add Jenkins master OpenSSH key to Jenkins slave
+  - name: Create directory for OpenSSH keypair
+    ansible.builtin.file:
+      path: "{{ jenkins_user.working_directory }}/.ssh"
+      state: directory
+      owner: "{{ jenkins_user.name }}" 
+      group: "{{ jenkins_user.group }}"
+      mode: "0700"
+
+  - name: Add Jenkins OpenSSH public key
+    ansible.posix.authorized_key:
+      user: "{{ jenkins_user.name }}"
+      state: present
+      key: "{{ lookup('file', item) }}"
+      path: "{{ jenkins_user.working_directory }}/.ssh/authorized_keys"
+    with_items:       
+      - /tmp/jenkins-master/{{ jenkins_user.key }}.pub
+...

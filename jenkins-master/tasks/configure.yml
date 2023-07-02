@@ -1,0 +1,19 @@
+---
+# Change configuration in /lib/systemd/system/jenkins.service 
+
+  - name: Fetch JAVA_HOME
+    shell: dirname $(readlink -f $(which javac))
+    register: java_home
+
+  - name: Set jenkins user
+    ansible.builtin.replace:
+      path: /lib/systemd/system/jenkins.service 
+      regexp: "{{ item.regexp }}"
+      replace: "{{ item.replace }}"
+    with_items:
+      - { regexp: 'User=jenkins', replace: "User={{ jenkins_user.name }}" }
+      - { regexp: 'Group=jenkins', replace: "Group={{ jenkins_user.group }}" }
+      - { regexp: 'WorkingDirectory=/var/lib/jenkins', replace: "WorkingDirectory={{ jenkins_user.working_directory }}"}
+      - { regexp: 'JENKINS_PORT=8080', replace: "JENKINS_PORT={{ jenkins_port }}"}
+    notify: Restart Jenkins service
+...

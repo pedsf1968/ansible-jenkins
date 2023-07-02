@@ -1,0 +1,11 @@
+---
+# tasks file to install Jenkins Packages
+  - name: "{{ 'Remove' if (jenkins_master_behavior == 'remove') else 'Install' }} Jenkins packages"
+    ansible.builtin.package:
+      name: "{{ item }}"
+      state: "{{ 'absent' if (jenkins_master_behavior == 'remove') else 'present' }}"
+    with_items: "{{ jenkins_packages_list }}"
+    tags: 
+      - jenkins
+      - package
+...

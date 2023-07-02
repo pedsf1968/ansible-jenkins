@@ -1,0 +1,17 @@
+---
+# Disable Jenkins service
+  - name: Stop Jenkins service
+    service:
+      name: jenkins
+      state: stopped
+      enabled: false
+
+  - name: Remove Jenkins service
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      -  /lib/systemd/system/jenkins.service
+      - /var/lib/jenkins
+      - /usr/share/java/jenkins.war
+...

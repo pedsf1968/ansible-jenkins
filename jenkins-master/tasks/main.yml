@@ -1,0 +1,15 @@
+---
+# tasks file for jenkins-master
+  - import_tasks: stop.yml
+    when: jenkins_master_behavior == 'remove'
+
+  - import_tasks: repository.yml
+  - import_tasks: packages.yml
+
+  - import_tasks: configure.yml
+    when: jenkins_master_behavior == 'install'
+  - import_tasks: ssh-key.yml
+    when: jenkins_master_behavior == 'install'
+  - import_tasks: password.yml
+    when: jenkins_master_behavior == 'install'
+...

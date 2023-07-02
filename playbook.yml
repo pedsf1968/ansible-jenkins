@@ -1,0 +1,27 @@
+---
+  - name: Deploy Jenkins Masters
+    hosts: [jenkins_masters]
+    gather_facts: true
+    become: true
+    vars:
+      nala_behavior: install
+    roles:
+      - system/nala
+      - java
+      - maven
+      - jenkins/jenkins-master
+
+  - name: Deploy Jenkins Slaves
+    hosts: [jenkins_slaves]
+    gather_facts: true
+    become: true
+    vars:
+      nala_behavior: install
+    roles:
+      - system/nala
+      - java
+      - maven
+      - docker
+      - tomcat
+      - jenkins/jenkins-slave
+...

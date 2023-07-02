@@ -1,0 +1,23 @@
+---
+# defaults file for jenkins-slave
+jenkins_slave_behavior: install
+
+jenkins_repository:
+  url: https://pkg.jenkins.io/debian-stable
+  key: jenkins.io-2023.key
+
+jenkins_packages_list:
+  - fontconfig
+  - jenkins
+
+jenkins_user: 
+  name: jenkins
+  group: jenkins
+  working_directory: /var/lib/jenkins
+  key: id_ssh_rsa
+  key_type: rsa
+  key_size: 4096
+
+jenkins_listen_address: "0.0.0.0"
+jenkins_port: 8081
+...

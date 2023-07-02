@@ -1,0 +1,33 @@
+---
+# Create jenkins user
+
+  - name: Create user directory
+    ansible.builtin.file:
+      path: "{{ jenkins_user.working_directory }}"
+      state: "{{ 'absent' if (jenkins_slave_behavior == 'remove') else 'directory' }}"
+      owner: "{{ jenkins_user.name }}"
+      group: "{{ jenkins_user.group }}"
+    when: jenkins_slave_behavior == 'install'
+
+  - name: Create Jenkins group
+    ansible.builtin.group:
+      name: "{{ jenkins_user.group }}"
+      state: present
+    when: jenkins_slave_behavior == 'install'
+
+  - name: "{{ 'Remove' if (jenkins_slave_behavior == 'remove') else 'Create' }} Jenkins user"
+    ansible.builtin.user:
+      name: "{{ jenkins_user.name }}"
+      group: "{{ jenkins_user.group }}"
+      comment: Jenkins user
+      shell: /bin/bash
+      home: "{{ jenkins_user.working_directory }}"
+      state: "{{ 'absent' if (jenkins_slave_behavior == 'remove') else 'present' }}"
+
+  - name: Remove Jenkins group
+    ansible.builtin.group:
+      name: "{{ jenkins_user.group }}"
+      state: absent
+    when: jenkins_slave_behavior == 'remove'
+
+...

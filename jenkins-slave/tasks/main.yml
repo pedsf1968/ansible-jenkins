@@ -1,0 +1,10 @@
+---
+# tasks file for jenkins-slave
+  - import_tasks: user.yml
+  
+  - include_tasks: "{{ item }}"
+    loop:
+      - ssh-key.yml
+      - agent.yml
+    when: jenkins_slave_behavior == 'install'  
+...

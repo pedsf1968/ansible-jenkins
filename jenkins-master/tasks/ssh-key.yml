@@ -1,0 +1,24 @@
+---
+# Generate ssh key for Jenkins user
+  - name: Create directory for OpenSSH keypair
+    ansible.builtin.file:
+      path: "{{ jenkins_user.working_directory }}/.ssh"
+      owner: "{{ jenkins_user.name }}"
+      group: "{{ jenkins_user.group }}"
+      state: directory
+
+  - name: Generate an OpenSSH keypair
+    community.crypto.openssh_keypair:
+      path: "{{ jenkins_user.working_directory }}/.ssh/{{ jenkins_user.key }}"
+      size: "{{ jenkins_user.key_size }}"
+      type: "{{ jenkins_user.key_type }}"
+      owner: "{{ jenkins_user.name }}"
+      group: "{{ jenkins_user.group }}"
+      force: true
+
+  - name: Fetch OpenSSH public key
+    ansible.builtin.fetch:
+      src: "{{ jenkins_user.working_directory }}/.ssh/{{ jenkins_user.key }}.pub"
+      dest: "/tmp/{{ inventory_hostname }}/{{ jenkins_user.key }}.pub"
+      flat: yes
+...

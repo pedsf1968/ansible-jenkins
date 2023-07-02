@@ -1,0 +1,11 @@
+---
+# tasks file to create Jenkins agent
+
+  - name: Download Jenkins agent
+    ansible.builtin.get_url:
+      url: "http://{{ hostvars['jenkins-master'].ansible_host }}:{{ jenkins_port }}/jnlpJars/slave.jar"
+      dest: "{{ jenkins_user.working_directory }}/slave.jar"
+      owner: "{{ jenkins_user.name }}"
+      group: "{{ jenkins_user.group }}"
+
+...
